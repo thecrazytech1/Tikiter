@@ -1,22 +1,58 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { useState } from "react";
 
 function App() {
+  const [results, setResults] = useState([]);
+
+  const FetchTickets = async () => {
+    const ip = await fetch("https://ipinfo.io?token=3d65915ff7b3f8");
+    const code = await ip.json();
+    const region = code.region.slice(0, 3);
+
+    const res = await fetch(
+      `https://app.ticketmaster.com/discovery/v2/venues?apikey=g2OZIw7lpR4NrRjG6qWjRiTQGW3sZbBL&locale=*&countryCode=${code.country}&stateCode=${region}`
+    );
+    const data = await res.json();
+
+    const d = data._embedded.venues;
+    console.log(d);
+    setResults(d);
+  };
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <h1 className="title">Tikiter</h1>
+        <h2 className="subtitle">Search for tickets nearby your city!</h2>
+
+        <div className="search">
+          <button onClick={FetchTickets}>Search</button>
+
+          <div className="results">
+            <h3>Results</h3>
+            <ul>
+              {results.map((result) => (
+                <div className="result">
+                  <strong>
+                    <a href={result.url}>{result.name}</a>
+                  </strong>
+
+                  {result.generalInfo ? (
+                    <p>{result.generalInfo.generalRule}</p>
+                  ) : (
+                    <p>No general info</p>
+                  )}
+
+                  {result.images ? (
+                    <img src={result.images[0].url} alt="venue" />
+                  ) : (
+                    <h6>No image</h6>
+                  )}
+                </div>
+              ))}
+            </ul>
+          </div>
+        </div>
       </header>
     </div>
   );
