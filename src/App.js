@@ -23,10 +23,10 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h1 className="title">Tikiter</h1>
-        <h2 className="subtitle">Search for tickets nearby your city!</h2>
+        <h2 className="subtitle">Hey! We use your IP to find the events near you!</h2>
 
         <div className="search">
-          <button onClick={FetchTickets}>Search</button>
+          <button onClick={FetchTickets}>Start Search</button>
 
           <div className="results">
             <h3>Results</h3>
